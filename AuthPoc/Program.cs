@@ -19,7 +19,6 @@ namespace AuthPoc
 
             builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
-                // The claim in the Jwt token where App roles are available.
                 options.TokenValidationParameters.RoleClaimType = "roles";
             });
 
@@ -32,12 +31,6 @@ namespace AuthPoc
             })
             .AddMicrosoftIdentityUI();
 
-            builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
-            {
-                // The claim in the Jwt token where App roles are available.
-                options.TokenValidationParameters.RoleClaimType = "roles";
-            });
-
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy(AuthorizationPolicies.AdminOrManager, policy => policy.RequireRole(AppRoles.Admin, AppRoles.Manager));
@@ -47,7 +40,6 @@ namespace AuthPoc
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");

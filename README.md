@@ -1,5 +1,6 @@
 # AspNetCoreMvcAuthorization
-Referneces:
+References:
+
 https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-app-sign-user-app-registration?tabs=aspnetcore
 
 https://github.com/Azure-Samples/ms-identity-docs-code-dotnet/blob/main/web-app-aspnet/README.md
