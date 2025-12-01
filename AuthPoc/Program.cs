@@ -7,6 +7,20 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace AuthPoc
 {
+    public interface IMyService
+    {
+        Task<string> DoWork(int i);
+    }
+
+    public class MyService : IMyService
+    {
+        public async Task<string> DoWork(int i)
+        {
+            await Task.Delay(i);
+            return "Hello World!";
+        }
+    }
+
     public class Program
     {
         public static void Main(string[] args)
@@ -17,9 +31,23 @@ namespace AuthPoc
 
             builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration);
 
+            builder.Services.AddScoped<IMyService, MyService>();
+
             builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.TokenValidationParameters.RoleClaimType = "roles";
+
+                options.Events.OnTokenValidated = async (ctx) =>
+                { 
+                    Console.WriteLine($"{DateTime.Now:O}: Enter OnTokenValidated");
+
+                    var service = ctx.HttpContext.RequestServices.GetRequiredService<IMyService>();
+
+                    var result = await service.DoWork(500);
+                    Console.WriteLine($"{DateTime.Now:O}: {result}");
+
+                    return;
+                };
             });
 
             builder.Services.AddControllersWithViews(options =>
